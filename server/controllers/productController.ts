@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Product from '../model/productModel';
 import { Request, Response } from 'express';
 
@@ -15,11 +16,19 @@ const getAllProducts = async (req: Request, res: Response) => {
 
 const getProduct = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.query;
         if (!id) {
             res.status(400).json({
                 success: false,
                 message: 'Product ID is required',
+            });
+            return;
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(id as string)) {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid Product ID format',
             });
             return;
         }
@@ -42,11 +51,19 @@ const getProduct = async (req: Request, res: Response): Promise<void> => {
 
 const deleteProduct = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.query;
         if (!id) {
             res.status(400).json({
                 success: false,
                 message: 'Product ID is required',
+            });
+            return;
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(id as string)) {
+            res.status(400).json({
+                success: false,
+                message: 'Invalid Product ID format',
             });
             return;
         }
