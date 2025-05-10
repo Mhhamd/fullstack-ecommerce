@@ -1,8 +1,102 @@
 import mongoose from 'mongoose';
 import Product from '../model/productModel';
+import cloudinary from 'cloudinary';
 import { Request, Response } from 'express';
+import '../config/cloudinary';
 
-const addProduct = async (req: Request, res: Response) => {};
+const addProduct = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {
+            name,
+            description,
+            price,
+            hasDiscount,
+            discount,
+            category,
+            subCategory,
+            sizes,
+            bestSeller,
+        } = req.body;
+
+        // Input Validation
+        const requiredFields = {
+            name,
+            description,
+            price,
+            hasDiscount,
+            category,
+            subCategory,
+            sizes,
+            bestSeller,
+        };
+
+        for (const [key, value] of Object.entries(requiredFields)) {
+            if (!value || value.toString().trim() === '') {
+                res.status(400).json({
+                    success: false,
+                    message: `Missing or empty required field ${key}`,
+                });
+                return;
+            }
+        }
+
+        // Uploading Images
+        const images: string[] = [];
+        if (req.files && typeof req.files === 'object') {
+            const fileFields = req.files as {
+                [fileName: string]: Express.Multer.File[];
+            };
+            for (const field of ['image1', 'image2', 'image3', 'image4']) {
+                if (fileFields[field]?.length > 0) {
+                    const file = fileFields[field][0];
+                    const uploadedImage = await cloudinary.v2.uploader.upload(
+                        file.path
+                    );
+                    images.push(uploadedImage.secure_url);
+                }
+            }
+        }
+
+        const parsedSizes = Array.isArray(sizes)
+            ? sizes
+            : sizes.split(',') || [];
+
+        // Adding the product
+        const newProduct = new Product({
+            name,
+            description,
+            price,
+            hasDiscount,
+            discount,
+            category,
+            subCategory,
+            bestSeller,
+            sizes: parsedSizes,
+            image: images,
+            date: new Date(),
+        });
+
+        await newProduct.save();
+        res.status(201).json({
+            success: true,
+            message: 'Product added successfully',
+            product: newProduct,
+        });
+    } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+            const validationErrors = Object.values(error.errors).map(
+                (err) => err.message
+            );
+            res.status(400).json({
+                success: false,
+                message: validationErrors.join(', '),
+            });
+            return;
+        }
+        console.error('Error adding product:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 const getAllProducts = async (req: Request, res: Response) => {
     try {
