@@ -5,7 +5,8 @@ interface IUser extends Document {
     lastName: string;
     email: string;
     password: string;
-    cart: [{}];
+    cart: [Object];
+    date: Date;
 }
 
 const userSchema = new Schema<IUser>({
@@ -13,7 +14,8 @@ const userSchema = new Schema<IUser>({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    cart: { type: [{}], default: [] },
+    date: { type: Date, default: Date.now },
+    cart: { type: [Object], default: [] },
 });
 
 const User = mongoose.models.user || mongoose.model<IUser>('user', userSchema);
