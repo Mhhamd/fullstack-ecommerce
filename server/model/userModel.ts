@@ -5,6 +5,7 @@ interface IUser extends Document {
     lastName: string;
     email: string;
     password: string;
+    role: string;
     cart: [Object];
     date: Date;
 }
@@ -14,6 +15,7 @@ const userSchema = new Schema<IUser>({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    role: { type: String, required: true, default: 'user' },
     date: { type: Date, default: Date.now },
     cart: { type: [Object], default: [] },
 });

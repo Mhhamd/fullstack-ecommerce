@@ -50,9 +50,13 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
             );
         }
 
-        const token = jwt.sign({ _id: existingUser._id }, tokenSecret, {
-            expiresIn: '30s',
-        });
+        const token = jwt.sign(
+            { _id: existingUser._id, role: existingUser.role },
+            tokenSecret,
+            {
+                expiresIn: '100s',
+            }
+        );
         res.status(200).header('Authorization', `Bearer ${token}`).json({
             success: true,
             message: 'Login successful',

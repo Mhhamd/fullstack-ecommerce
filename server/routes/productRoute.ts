@@ -7,11 +7,14 @@ import {
     updateProduct,
 } from '../controllers/productController';
 import upload from '../middleware/multer';
+import { authorizeRoles, authUser } from '../middleware/auth';
 
 const router = express.Router();
 
 router.post(
     '/add',
+    authUser,
+    authorizeRoles('admin'),
     upload.fields([
         { name: 'image1', maxCount: 1 },
         { name: 'image2', maxCount: 1 },
@@ -22,7 +25,7 @@ router.post(
 );
 router.get('/getProduct', getProduct);
 router.get('/getAllProducts', getAllProducts);
-router.delete('/delete', deleteProduct);
-router.put('/update', updateProduct);
+router.delete('/delete', authUser, authorizeRoles('admin'), deleteProduct);
+router.put('/update', authUser, authorizeRoles('admin'), updateProduct);
 
 export default router;

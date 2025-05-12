@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-export interface AuthenticatedRequest extends Request {
+interface AuthenticatedRequest extends Request {
     user?: JwtPayload;
 }
 
-export const authenticateToken = async (
+const authUser = async (
     req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
@@ -14,17 +14,16 @@ export const authenticateToken = async (
     const token = authHeader?.split(' ')[1];
 
     if (!token) {
-        res.status(401).json({ success: false, message: 'Access Denied' });
+        res.status(403).json({ success: false, message: 'Access Denied' });
         return;
     }
 
     const tokenSecret = process.env.TOKEN_SECRET;
     if (!tokenSecret) {
-        if (!tokenSecret)
-            res.status(500).json({
-                success: false,
-                message: 'TOKEN_SECRET missing',
-            });
+        res.status(500).json({
+            success: false,
+            message: 'TOKEN_SECRET missing',
+        });
         return;
     }
 
@@ -37,3 +36,22 @@ export const authenticateToken = async (
         res.status(401).json({ success: false, message: 'Invalid token' });
     }
 };
+
+const authorizeRoles = (...allowedRules: string[]) => {
+    return async (
+        req: AuthenticatedRequest,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        if (!req.user || !allowedRules.includes(req.user.role)) {
+            res.status(403).json({
+                success: false,
+                message: 'Access denied: insufficient permissions',
+            });
+            return;
+        }
+        next();
+    };
+};
+
+export { authUser, authorizeRoles };
