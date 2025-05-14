@@ -1,3 +1,4 @@
+import BestSellers from '../components/BestSellers';
 import Hero from '../components/Hero';
 import TopCategory from '../components/TopCategory';
 
@@ -6,6 +7,7 @@ function Home() {
         <div>
             <Hero />
             <TopCategory />
+            <BestSellers />
         </div>
     );
 }

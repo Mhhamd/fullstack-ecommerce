@@ -6,7 +6,13 @@ interface TitleProps {
 function Title({ title, showButton }: TitleProps) {
     return (
         <div className="w-full ">
-            <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center gap-4 ">
+            <div
+                className={`flex ${
+                    showButton
+                        ? 'items-start justify-between sm:flex-row'
+                        : 'items-center'
+                }  flex-col  sm:items-center gap-4 `}
+            >
                 <h1 className="uppercase tracking-wide text-[26px] font-normal">
                     {title}
                 </h1>
