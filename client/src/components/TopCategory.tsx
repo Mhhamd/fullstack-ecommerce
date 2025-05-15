@@ -22,15 +22,14 @@ function TopCategory() {
         {
             image: '/images/category_shoes.jpg',
             category: 'Shoes',
-            className:
-                'object-center object-cover w-full border sm:border-r-0 ',
+            className: 'object-center object-cover w-full  ',
         },
     ];
 
     return (
         <div className=" w-screen pt-15 sm:px-10 px-5">
             <Title title="top category" showButton={true} />
-            <div className="flex w-full items-center justify-center border-black mt-7 lg:flex-row flex-col">
+            <div className="flex w-full items-center justify-center border-black mt-7 lg:flex-row flex-col gap-y-2">
                 {topCategoryImages.map((item) => {
                     return (
                         <Link className="w-full" key={item.category} to={'/'}>
@@ -55,7 +54,7 @@ function TopCategory() {
 
                                 {/* Image */}
                                 <img
-                                    className={`${item.className}`}
+                                    className={`${item.className} border`}
                                     src={item.image}
                                     alt={item.category}
                                 />
