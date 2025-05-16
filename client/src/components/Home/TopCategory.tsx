@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Title from './shared/Title';
+import Title from '../shared/Title';
 import {
     MouseParallaxContainer,
     MouseParallaxChild,

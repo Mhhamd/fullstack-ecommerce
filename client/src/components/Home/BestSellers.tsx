@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import ImageCard from './shared/ImageCard';
-import Title from './shared/Title';
+import ImageCard from '../shared/ImageCard';
+import Title from '../shared/Title';
 
 function BestSellers() {
     const bestSellerImages = [

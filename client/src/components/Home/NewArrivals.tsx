@@ -1,5 +1,5 @@
-import ImageCard from './shared/ImageCard';
-import Title from './shared/Title';
+import ImageCard from '../shared/ImageCard';
+import Title from '../shared/Title';
 
 function NewArrivals() {
     const newArrivalImage = [
