@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import User from '../model/userModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import Product from '../model/productModel';
 
 const loginUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -142,4 +144,61 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-export { loginUser, registerUser };
+const addToCart = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userId, productId, quantity, size } = req.body;
+
+        if (!userId || !productId) {
+            res.status(400).json({
+                success: false,
+                message: 'userId and productId are required',
+            });
+            return;
+        }
+
+        if (
+            !mongoose.Types.ObjectId.isValid(userId) ||
+            !mongoose.Types.ObjectId.isValid(productId)
+        ) {
+            res.status(400).json({
+                success: false,
+                message: 'invalid userId or productId',
+            });
+            return;
+        }
+
+        const user = await User.findById(userId);
+        const product = await Product.findById(productId);
+
+        if (!user || !product) {
+            res.status(404).json({
+                success: false,
+                message: 'User or Product not found',
+            });
+            return;
+        }
+
+        const cartItem = {
+            productId: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: quantity || 1,
+            size: size || null,
+            image: product.image[0] || null,
+        };
+
+        user.cart.push(cartItem);
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Product added to cart',
+            cart: user.cart,
+        });
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+export { loginUser, registerUser, addToCart };

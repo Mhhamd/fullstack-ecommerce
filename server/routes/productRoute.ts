@@ -23,8 +23,8 @@ router.post(
     ]),
     addProduct
 );
-router.get('/getProduct', getProduct);
-router.get('/getAllProducts', getAllProducts);
+router.get('/get-product', getProduct);
+router.get('/get-all-products', getAllProducts);
 router.delete('/delete', authUser, authorizeRoles('admin'), deleteProduct);
 router.put('/update', authUser, authorizeRoles('admin'), updateProduct);
 

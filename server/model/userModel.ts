@@ -10,6 +10,15 @@ interface IUser extends Document {
     date: Date;
 }
 
+const cartItemSchema = new Schema({
+    productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    name: String,
+    price: Number,
+    quantity: { type: Number, default: 1 },
+    size: String,
+    image: String,
+});
+
 const userSchema = new Schema<IUser>({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -17,7 +26,7 @@ const userSchema = new Schema<IUser>({
     password: { type: String, required: true },
     role: { type: String, required: true, default: 'user' },
     date: { type: Date, default: Date.now },
-    cart: { type: [Object], default: [] },
+    cart: { type: [cartItemSchema], default: [] },
 });
 
 const User = mongoose.models.user || mongoose.model<IUser>('user', userSchema);
