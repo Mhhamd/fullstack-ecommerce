@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 interface TitleProps {
     title: string;
     showButton?: boolean;
@@ -5,7 +7,7 @@ interface TitleProps {
 
 function Title({ title, showButton }: TitleProps) {
     return (
-        <div className="w-full ">
+        <div>
             <div
                 className={`flex ${
                     showButton
@@ -17,9 +19,11 @@ function Title({ title, showButton }: TitleProps) {
                     {title}
                 </h1>
                 {showButton && (
-                    <button className="uppercase py-3  tracking-wide px-7 bg-white border border-black hover:bg-black hover:text-white cursor-pointer transition-all duration-300 ">
-                        view all category
-                    </button>
+                    <Link to={'/shop-all'}>
+                        <button className="uppercase py-3  tracking-wide px-7 bg-white border border-black hover:bg-black hover:text-white cursor-pointer transition-all duration-300 ">
+                            view all category
+                        </button>
+                    </Link>
                 )}
             </div>
         </div>
