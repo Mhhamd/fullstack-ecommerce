@@ -1,13 +1,14 @@
 import { NavLink, Link } from 'react-router-dom';
-import { CiSearch, CiShoppingCart, CiUser } from 'react-icons/ci';
+import { CiShoppingCart, CiUser } from 'react-icons/ci';
 import { FaExclamation, FaHome, FaShoppingBag } from 'react-icons/fa';
 import { MdConnectWithoutContact } from 'react-icons/md';
 import { IoCloseSharp } from 'react-icons/io5';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoIosMenu } from 'react-icons/io';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
     const navLinks = [
         { name: 'HOME', link: '/', icon: <FaHome /> },
@@ -19,6 +20,21 @@ function Header() {
             icon: <MdConnectWithoutContact />,
         },
     ];
+
+    const handleCart = () => {
+        setIsCartOpen(!isCartOpen);
+    };
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1023 && isMenuOpen) {
+                setIsMenuOpen(false);
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [isMenuOpen]);
 
     return (
         <>
@@ -91,16 +107,18 @@ function Header() {
 
                 {/* Right section */}
                 <div className="flex-1 flex justify-end items-center gap-5 text-2xl">
-                    <CiSearch className="hover:opacity-50 transition-all duration-300 cursor-pointer" />
+                    {/* User */}
                     <Link
                         className="hover:opacity-50 transition-all duration-300"
                         to={'/login'}
                     >
                         <CiUser />
                     </Link>
-                    <Link
-                        to={'/cart'}
-                        className="relative hover:opacity-50 transition-all duration-300 "
+
+                    {/* Cart */}
+                    <div
+                        onClick={handleCart}
+                        className="relative hover:opacity-50 transition-all duration-300 cursor-pointer "
                     >
                         <CiShoppingCart />
                         <p
@@ -109,7 +127,38 @@ function Header() {
                         >
                             0
                         </p>
-                    </Link>
+                    </div>
+
+                    {/* Cart sidebar */}
+                    <div
+                        onClick={handleCart}
+                        className={`fixed inset-0 bg-black/50 z-[100] transition-all duration-300 ${
+                            isCartOpen
+                                ? 'opacity-100'
+                                : 'opacity-0 pointer-events-none'
+                        }`}
+                    >
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            className={`bg-white absolute right-0 top-0 h-full w-full sm:w-2/3 md:w-2/4 lg:w-2/6 xl:max-w-sm 2xl:max-w-lg transition-all duration-300 shadow-2xl p-10 flex items-start justify-start ${
+                                isCartOpen
+                                    ? 'translate-x-0 opacity-100'
+                                    : 'translate-x-full opacity-0'
+                            }`}
+                        >
+                            <div className="flex items-center justify-between w-full">
+                                <h1 className="uppercase text-2xl tracking-wide">
+                                    your cart
+                                </h1>
+                                <IoCloseSharp
+                                    onClick={handleCart}
+                                    className="text-2xl hover:opacity-50 transition-all duration-300 cursor-pointer"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* menu for phones */}
                     <div
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         className="hover:opacity-50 transition-all duration-300 cursor-pointer block lg:hidden"
