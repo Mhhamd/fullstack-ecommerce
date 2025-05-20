@@ -41,7 +41,8 @@ function BestSellers() {
                 <div className=" w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-3 border-black mt-7 ">
                     {bestSellerImages.map((item) => {
                         return (
-                            <div
+                            <Link
+                                to={'/product'}
                                 key={item.productName}
                                 className="relative overflow-hidden group cursor-pointer w-full  "
                             >
@@ -52,7 +53,7 @@ function BestSellers() {
                                     showImage={item.showImage}
                                     hiddenImage={item.hiddenImage}
                                 />
-                            </div>
+                            </Link>
                         );
                     })}
                 </div>
