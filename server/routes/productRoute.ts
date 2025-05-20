@@ -23,9 +23,9 @@ router.post(
     ]),
     addProduct
 );
-router.get('/get-product', getProduct);
+router.get('/get-product/:id', getProduct);
 router.get('/get-all-products', getAllProducts);
-router.delete('/delete', authUser, authorizeRoles('admin'), deleteProduct);
-router.put('/update', authUser, authorizeRoles('admin'), updateProduct);
+router.delete('/delete/:id', authUser, authorizeRoles('admin'), deleteProduct);
+router.put('/update/:id', authUser, authorizeRoles('admin'), updateProduct);
 
 export default router;

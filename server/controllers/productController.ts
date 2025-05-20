@@ -110,7 +110,7 @@ const getAllProducts = async (req: Request, res: Response) => {
 
 const getProduct = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.query;
+        const { id } = req.params;
         if (!id) {
             res.status(400).json({
                 success: false,
@@ -145,7 +145,7 @@ const getProduct = async (req: Request, res: Response): Promise<void> => {
 
 const deleteProduct = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.query;
+        const { id } = req.params;
         if (!id) {
             res.status(400).json({
                 success: false,
@@ -183,6 +183,7 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
 
 const updateProduct = async (req: Request, res: Response): Promise<void> => {
     try {
+        const { id } = req.params;
         const {
             name,
             description,
@@ -194,7 +195,6 @@ const updateProduct = async (req: Request, res: Response): Promise<void> => {
             subCategory,
             sizes,
             bestSeller,
-            id,
         } = req.body;
         if (!id) {
             res.status(400).json({
