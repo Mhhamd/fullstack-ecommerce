@@ -59,11 +59,19 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
                 expiresIn: '100s',
             }
         );
-        res.status(200).header('Authorization', `Bearer ${token}`).json({
-            success: true,
-            message: 'Login successful',
-            token: token,
-        });
+        res.status(200)
+            .header('Authorization', `Bearer ${token}`)
+            .json({
+                success: true,
+                message: 'Login successful',
+                token,
+                user: {
+                    _id: existingUser._id,
+                    name: existingUser.name,
+                    email: existingUser.email,
+                    role: existingUser.role,
+                },
+            });
     } catch (error) {
         res.status(500).json({
             success: false,
