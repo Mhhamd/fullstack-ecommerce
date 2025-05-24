@@ -10,8 +10,6 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
             name,
             description,
             price,
-            hasDiscount,
-            discount,
             category,
             subCategory,
             sizes,
@@ -23,7 +21,6 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
             name,
             description,
             price,
-            hasDiscount,
             category,
             subCategory,
             sizes,
@@ -57,17 +54,13 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
             }
         }
 
-        const parsedSizes = Array.isArray(sizes)
-            ? sizes
-            : sizes.split(',') || [];
+        const parsedSizes = Array.isArray(sizes) ? sizes : JSON.parse(sizes);
 
         // Adding the product
         const newProduct = new Product({
             name,
             description,
             price,
-            hasDiscount,
-            discount,
             category,
             subCategory,
             bestSeller,
