@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -7,6 +8,8 @@ function Login() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -36,18 +39,22 @@ function Login() {
                 setError(data.message || 'Login failed');
                 return;
             }
+
             if (data.user.role !== 'admin') {
                 setError('Access denied: Admins only');
                 return;
             }
-            navigate('/dashboard');
+
+            if (res.ok && data.user.role === 'admin') {
+                login(data.token, data.user);
+                navigate('/add');
+            }
         } catch (error) {
             console.error('Login error:', error);
             setError('Something went wrong. Please try again later.');
         } finally {
             setIsLoading(false);
         }
-        console.log('Logging in with:', email, password);
     };
 
     return (
@@ -101,8 +108,10 @@ function Login() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-all duration-300 cursor-pointer ${
-                            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                        className={`w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-all duration-300  ${
+                            isLoading
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'cursor-pointer'
                         }`}
                     >
                         Login
