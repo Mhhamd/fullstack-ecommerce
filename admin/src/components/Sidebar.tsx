@@ -13,6 +13,15 @@ function Sidebar() {
                     Add Item
                 </NavLink>
             </div>
+            <div className="flex items-center gap-5 flex-col">
+                <NavLink
+                    to={'/all-items'}
+                    className="bg-white text-black border border-gray-500 border-r-0 text-center w-full py-2 hover:bg-black hover:text-white transition-all duration-300 tracking-wide font-medium flex items-center gap-2 pl-5 "
+                >
+                    <IoIosAddCircleOutline className="text-xl" />
+                    All Items
+                </NavLink>
+            </div>
         </div>
     );
 }
