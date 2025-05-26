@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import handleUnauthorized from '../utils/unauthorizedHandler';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 
 interface ProductI {
@@ -20,7 +20,7 @@ interface ProductI {
 function All_Items() {
     const [products, setProducts] = useState<ProductI[] | null>(null);
     const navigate = useNavigate();
-    const { logout, token } = useAuth();
+    const { logout, token, getProduct } = useAuth();
 
     const getProducts = useCallback(async () => {
         try {
@@ -122,9 +122,13 @@ function All_Items() {
                                 >
                                     Delete
                                 </button>
-                                <button className="text-white font-semibold bg-black py-2 px-5 rounded-2xl hover:cursor-pointer hover:opacity-50 transition-all duration-300">
+                                <Link
+                                    onClick={() => getProduct(item)}
+                                    to={`/update/${item._id}`}
+                                    className="text-white font-semibold bg-black py-2 px-5 rounded-2xl hover:cursor-pointer hover:opacity-50 transition-all duration-300"
+                                >
                                     Update
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     );

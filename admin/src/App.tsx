@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import DashboardLayout from './components/DashboardLayout';
 import All_Items from './pages/All_Items';
+import Update from './pages/Update';
 
 function App() {
     return (
@@ -29,6 +30,16 @@ function App() {
                         <ProtectedRoute>
                             <DashboardLayout>
                                 <All_Items />
+                            </DashboardLayout>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/update/:id"
+                    element={
+                        <ProtectedRoute>
+                            <DashboardLayout>
+                                <Update />
                             </DashboardLayout>
                         </ProtectedRoute>
                     }

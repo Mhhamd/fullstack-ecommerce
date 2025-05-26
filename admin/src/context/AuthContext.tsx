@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import type { ProductI } from './AuthProvider';
 
 interface User {
     email: string;
@@ -10,6 +11,8 @@ export interface AuthContextType {
     user: User | null;
     login: (token: string, user: User) => void;
     logout: () => void;
+    getProduct: (product: ProductI) => void;
+    currentProduct: ProductI | null;
     isAuthenticated: boolean;
 }
 
