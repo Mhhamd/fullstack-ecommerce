@@ -3,6 +3,7 @@ import { FaCloudUploadAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
+import handleUnauthorized from '../utils/unauthorizedHandler';
 
 function Add() {
     const [images, setImages] = useState<(File | null)[]>([
@@ -71,16 +72,13 @@ function Add() {
 
             const data = await response.json();
 
-            if (response.status === 401) {
-                toast.error(data.message + ' Redirecting in 2 seconds', {
-                    autoClose: 2000,
-                });
-                setTimeout(() => {
-                    logout();
-                    navigate('/', { replace: true });
-                }, 2000);
-                return;
-            }
+            const handled = handleUnauthorized(
+                response,
+                data.message,
+                navigate,
+                logout
+            );
+            if (handled) return;
 
             if (!response.ok) {
                 toast.error(data.message || 'Something went wrong');
