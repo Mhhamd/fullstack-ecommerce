@@ -1,6 +1,7 @@
 import express from 'express';
 import connectDB from './config/mongodb';
 import productRoute from './routes/productRoute';
+import protectedRoute from './routes/protectedRoute';
 import userRoute from './routes/userRoute';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -16,6 +17,7 @@ app.use(cors());
 connectDB();
 
 //routers
+app.use('/api/protected', protectedRoute);
 app.use('/api/product/', productRoute);
 app.use('/api/user/', userRoute);
 
