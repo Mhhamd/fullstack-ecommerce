@@ -1,26 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import ImageCard from '../shared/ImageCard';
-import { toast } from 'react-toastify';
+import { useProduct } from '../../context/useProduct';
 import type ProductI from '../shared/productType';
 
-function Collection() {
-    const [products, setProducts] = useState<ProductI[] | null>(null);
+type Props = {
+    products: ProductI[];
+};
 
-    const getAllProducts = useCallback(async () => {
-        try {
-            const res = await fetch(
-                'http://localhost:3500/api/product/get-all-products'
-            );
-            const data = await res.json();
-            if (!res.ok) {
-                toast.error(data.message || 'Something went wrong');
-                return;
-            }
-            setProducts(data.products);
-        } catch (error) {
-            console.error(error);
-        }
-    }, []);
+function Collection({ products }: Props) {
+    const { getAllProducts } = useProduct();
 
     useEffect(() => {
         getAllProducts();

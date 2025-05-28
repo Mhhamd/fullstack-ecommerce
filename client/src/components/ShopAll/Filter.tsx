@@ -2,9 +2,42 @@ import { useEffect, useState } from 'react';
 import Title from '../shared/Title';
 import Collection from './Collection';
 import { FaArrowRight } from 'react-icons/fa';
+import { useProduct } from '../../context/useProduct';
 
 function Filter() {
     const [filterMenu, setFilterMenu] = useState<boolean>(false);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedSubCategories, setSelectedSubCategories] = useState<
+        string[]
+    >([]);
+    const { products } = useProduct();
+
+    const handleSubCategoryChange = (subCategory: string) => {
+        setSelectedSubCategories((prev) =>
+            prev.includes(subCategory)
+                ? prev.filter((s) => s !== subCategory)
+                : [...prev, subCategory]
+        );
+    };
+    const filteredProducts = products.filter((product) => {
+        const matchesCategory =
+            selectedCategories.length === 0 ||
+            selectedCategories.includes(product.category.toLowerCase());
+
+        const matchesSubCategory =
+            selectedSubCategories.length === 0 ||
+            selectedSubCategories.includes(product.subCategory.toLowerCase());
+
+        return matchesCategory && matchesSubCategory;
+    });
+
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategories((prev) =>
+            prev.includes(category)
+                ? prev.filter((c) => c !== category)
+                : [...prev, category]
+        );
+    };
 
     const handleFilterMenu = () => {
         setFilterMenu(!filterMenu);
@@ -40,7 +73,12 @@ function Filter() {
                                 categories
                             </p>
                             <div className="flex gap-2 items-center">
-                                <input value={'men'} type="checkbox" id="men" />
+                                <input
+                                    onChange={() => handleCategoryChange('men')}
+                                    value={'men'}
+                                    type="checkbox"
+                                    id="men"
+                                />
                                 <label
                                     htmlFor="men"
                                     className="text-sm text-gray-700"
@@ -50,6 +88,9 @@ function Filter() {
                             </div>
                             <div className="flex gap-2 items-center">
                                 <input
+                                    onChange={() =>
+                                        handleCategoryChange('women')
+                                    }
                                     value={'women'}
                                     type="checkbox"
                                     id="women"
@@ -63,6 +104,9 @@ function Filter() {
                             </div>
                             <div className="flex gap-2 items-center">
                                 <input
+                                    onChange={() =>
+                                        handleCategoryChange('kids')
+                                    }
                                     value={'kids'}
                                     type="checkbox"
                                     id="kids"
@@ -82,7 +126,14 @@ function Filter() {
                                 sub category
                             </p>
                             <div className="flex gap-2 items-center">
-                                <input type="checkbox" id="topwear" />
+                                <input
+                                    value={'topwear'}
+                                    onChange={() =>
+                                        handleSubCategoryChange('topwear')
+                                    }
+                                    type="checkbox"
+                                    id="topwear"
+                                />
                                 <label
                                     htmlFor="topwear"
                                     className="text-sm text-gray-700"
@@ -91,7 +142,14 @@ function Filter() {
                                 </label>
                             </div>
                             <div className="flex gap-2 items-center">
-                                <input type="checkbox" id="bottomwear" />
+                                <input
+                                    value={'bottomwear'}
+                                    onChange={() =>
+                                        handleSubCategoryChange('bottomwear')
+                                    }
+                                    type="checkbox"
+                                    id="bottomwear"
+                                />
                                 <label
                                     htmlFor="bottomwear"
                                     className="text-sm text-gray-700"
@@ -110,7 +168,7 @@ function Filter() {
                     <Title title="All collection" />
                     {/* <Title title="All collection" /> */}
                 </div>
-                <Collection />
+                <Collection products={filteredProducts} />
             </div>
         </div>
     );
