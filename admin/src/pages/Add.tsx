@@ -3,7 +3,6 @@ import { FaCloudUploadAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
-import handleUnauthorized from '../utils/unauthorizedHandler';
 
 function Add() {
     const [images, setImages] = useState<(File | null)[]>([
@@ -22,7 +21,7 @@ function Add() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const { token, logout } = useAuth();
+    const { token } = useAuth();
 
     const handleImageChange = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -72,19 +71,20 @@ function Add() {
 
             const data = await response.json();
 
-            const handled = handleUnauthorized(
-                response,
-                data.message,
-                navigate,
-                logout
-            );
-            if (handled) return;
-
             if (!response.ok) {
                 toast.error(data.message || 'Something went wrong');
                 return;
             }
             toast.success('Product added successfully');
+            setTimeout(() => {
+                navigate('/all-items');
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth',
+                    });
+                }, 500);
+            }, 2000);
         } catch (error) {
             console.error(error);
             toast.error('Unexpected server response.');

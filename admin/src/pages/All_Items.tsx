@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import handleUnauthorized from '../utils/unauthorizedHandler';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 
 interface ProductI {
@@ -19,8 +18,7 @@ interface ProductI {
 
 function All_Items() {
     const [products, setProducts] = useState<ProductI[] | null>(null);
-    const navigate = useNavigate();
-    const { logout, token, getProduct } = useAuth();
+    const { token, getProduct } = useAuth();
 
     const getProducts = useCallback(async () => {
         try {
@@ -52,14 +50,6 @@ function All_Items() {
                 }
             );
             const data = await res.json();
-            const handled = handleUnauthorized(
-                res,
-                data.message,
-                navigate,
-                logout
-            );
-            if (handled) return;
-
             if (!res.ok) {
                 toast.error(data.message || 'Something went wrong');
                 return;

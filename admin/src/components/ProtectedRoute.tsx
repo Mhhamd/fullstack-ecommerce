@@ -26,7 +26,10 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
                 });
 
                 const data = await res.json();
-                if (!data.valid) toast.error(data.message);
+                if (!data.valid) {
+                    toast.error(data.message);
+                    logout();
+                }
                 setIsValid(data.valid);
             } catch (error) {
                 console.error(error);
@@ -38,7 +41,12 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
         const intervalId = setInterval(checkToken, 102000);
 
         const handleCloseTab = () => {
-            logout();
+            const navEntry = performance.getEntriesByType(
+                'navigation'
+            )[0] as PerformanceNavigationTiming;
+            const isReload = navEntry.type === 'reload';
+
+            if (!isReload) logout();
         };
 
         window.addEventListener('beforeunload', handleCloseTab);
