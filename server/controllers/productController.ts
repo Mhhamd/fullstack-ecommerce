@@ -196,6 +196,7 @@ const updateProduct = async (req: Request, res: Response): Promise<void> => {
             });
             return;
         }
+        const parsedSizes = Array.isArray(sizes) ? sizes : JSON.parse(sizes);
 
         const product = await Product.findByIdAndUpdate(
             id,
@@ -208,7 +209,7 @@ const updateProduct = async (req: Request, res: Response): Promise<void> => {
                 image,
                 category,
                 subCategory,
-                sizes,
+                sizes: parsedSizes,
                 bestSeller,
             },
             { new: true }

@@ -26,6 +26,12 @@ router.post(
 router.get('/get-product/:id', getProduct);
 router.get('/get-all-products', getAllProducts);
 router.delete('/delete/:id', authUser, authorizeRoles('admin'), deleteProduct);
-router.put('/update/:id', authUser, authorizeRoles('admin'), updateProduct);
+router.put(
+    '/update/:id',
+    authUser,
+    authorizeRoles('admin'),
+    upload.none(),
+    updateProduct
+);
 
 export default router;
