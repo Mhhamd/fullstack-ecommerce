@@ -15,9 +15,6 @@ function Filter() {
             if (window.innerWidth >= 768) {
                 setFilterMenu(true);
             }
-            if (window.innerWidth <= 767) {
-                setFilterMenu(false);
-            }
         };
 
         handleResize();

@@ -13,7 +13,7 @@ function ImageCard({ showImage, hiddenImage, productName, price }: ImageProps) {
                 className="group-hover:opacity-0 absolute z-10 transition-all duration-600 border w-full "
             />
             <img className="border w-full " src={hiddenImage} />
-            <div className=" bg-white border px-6 h-25 flex items-start justify-center flex-col">
+            <div className=" bg-white border px-6 h-30 flex items-start justify-center flex-col">
                 <h1 className="md:text-lg text-base  font-semibold tracking-wider">
                     {productName}
                 </h1>
