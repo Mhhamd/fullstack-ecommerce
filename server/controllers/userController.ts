@@ -64,12 +64,13 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
             .json({
                 success: true,
                 message: 'Login successful',
-                token,
+                token: token,
                 user: {
                     _id: existingUser._id,
-                    name: existingUser.name,
+                    name: existingUser.firstName,
                     email: existingUser.email,
                     role: existingUser.role,
+                    cart: existingUser.cart,
                 },
             });
     } catch (error) {
