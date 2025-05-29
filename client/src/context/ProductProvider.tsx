@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import type ProductI from '../components/shared/productType';
+import type ProductI from '../types/productType';
 import { toast } from 'react-toastify';
 import { ProductContext } from './ProductContext';
 
@@ -9,6 +9,12 @@ type Props = {
 
 export const ProductProvider = ({ children }: Props) => {
     const [products, setProducts] = useState<ProductI[]>([]);
+    const [currentProduct, setCurrentProduct] = useState<ProductI | null>(
+        () => {
+            const productData = localStorage.getItem('currentProduct');
+            return productData ? JSON.parse(productData) : null;
+        }
+    );
 
     const getAllProducts = useCallback(async () => {
         try {
@@ -26,8 +32,15 @@ export const ProductProvider = ({ children }: Props) => {
             toast.error('Failed to fetch products');
         }
     }, []);
+
+    const getProduct = async (product: ProductI) => {
+        setCurrentProduct(product);
+        localStorage.setItem('currentProduct', JSON.stringify(product));
+    };
     return (
-        <ProductContext.Provider value={{ getAllProducts, products }}>
+        <ProductContext.Provider
+            value={{ getAllProducts, products, getProduct, currentProduct }}
+        >
             {children}
         </ProductContext.Provider>
     );
