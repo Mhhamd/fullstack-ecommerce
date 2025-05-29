@@ -6,6 +6,9 @@ import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
 import ShopAll from './pages/ShopAll';
 import Product from './pages/Product';
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
+import Profile from './pages/Profile';
 
 function App() {
     return (
@@ -13,10 +16,19 @@ function App() {
             <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/shop-all" element={<ShopAll />} />
                 <Route path="/product/:id" element={<Product />} />
+                <Route
+                    path="/profile/:id"
+                    element={
+                        <ProtectedRoute>
+                            <Profile />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
             <Footer />
         </div>

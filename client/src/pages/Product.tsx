@@ -1,24 +1,26 @@
 import BestSellers from '../components/Home/BestSellers';
 import ProductBenefits from '../components/Product/ProductBenefits';
 import ProductReviews from '../components/Product/ProductReviews';
+import { useProduct } from '../context/useProduct';
 
 function Product() {
+    const { currentProduct } = useProduct();
     return (
         <>
             <div className=" w-screen pt-15 sm:px-10 px-5">
                 <div className="flex items-start justify-between w-full gap-10 sticky top-5 lg:gap-20 lg:flex-row flex-col">
                     {/* Left section images */}
                     <div className="flex items-center flex-col gap-5 w-full">
-                        <img
-                            className="border cursor-pointer w-150 lg:w-full"
-                            src="/images/bestSeller1_show.jpg"
-                            alt=""
-                        />
-                        <img
-                            className="border cursor-pointer  w-150 lg:w-full"
-                            src="/images/bestSeller1_hidden.jpg"
-                            alt=""
-                        />
+                        {currentProduct?.image.map((imageURL) => {
+                            return (
+                                <img
+                                    key={imageURL}
+                                    className="border cursor-pointer w-150 lg:w-full"
+                                    src={imageURL}
+                                    alt=""
+                                />
+                            );
+                        })}
                     </div>
 
                     {/* Right section details */}
@@ -27,15 +29,12 @@ function Product() {
                         <div className="flex items-start flex-col w-full">
                             <div>
                                 <h1 className="text-5xl lg:text-6xl uppercase tracking-wide leading-18 font-medium">
-                                    Women's Nylite Plus Sneakers
+                                    {currentProduct?.name}
                                 </h1>
                             </div>
                             <div className="flex items-center gap-6 mt-2">
                                 <p className="text-2xl  font-medium">
-                                    $ 65.00 USD
-                                </p>
-                                <p className=" text-lg line-through text-gray-600 font-light">
-                                    $ 102.00 USD
+                                    $ {currentProduct?.price}.00 USD
                                 </p>
                             </div>
                         </div>
@@ -44,11 +43,7 @@ function Product() {
                         <div className="flex items-start flex-col w-full gap-5 mt-5">
                             <div className="w-2/3">
                                 <p className="tracking-wide text-sm">
-                                    The point of using Lorem Ipsum is that it
-                                    has a more-or-less normal distribution of
-                                    letters, as opposed to using 'Content here,
-                                    content here', making it look like readable
-                                    English.
+                                    {currentProduct?.description}
                                 </p>
                             </div>
                             {/* Quantity */}

@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import ImageCard from '../shared/ImageCard';
 import Title from '../shared/Title';
-import type ProductI from '../shared/productType';
+import type ProductI from '../../types/productType';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { useProduct } from '../../context/useProduct';
 
 function NewArrivals() {
     const [newArrivals, setNewArrivals] = useState<ProductI[] | null>(null);
+    const { getProduct } = useProduct();
 
     const getNewArrivals = useCallback(async () => {
         try {
@@ -65,7 +68,9 @@ function NewArrivals() {
                 <div className=" w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-3 border-black mt-7 ">
                     {newArrivals?.map((item) => {
                         return (
-                            <div
+                            <Link
+                                onClick={() => getProduct(item)}
+                                to={`/product/${item._id}`}
                                 key={item._id}
                                 className="relative overflow-hidden group cursor-pointer w-full  "
                             >
@@ -75,7 +80,7 @@ function NewArrivals() {
                                     showImage={item.image[0]}
                                     hiddenImage={item.image[1]}
                                 />
-                            </div>
+                            </Link>
                         );
                     })}
                 </div>

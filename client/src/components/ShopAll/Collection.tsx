@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import ImageCard from '../shared/ImageCard';
 import { useProduct } from '../../context/useProduct';
-import type ProductI from '../shared/productType';
+import type ProductI from '../../types/productType';
+import { Link } from 'react-router-dom';
 
 type Props = {
     products: ProductI[];
 };
 
 function Collection({ products }: Props) {
-    const { getAllProducts } = useProduct();
+    const { getAllProducts, getProduct } = useProduct();
 
     useEffect(() => {
         getAllProducts();
@@ -52,7 +53,9 @@ function Collection({ products }: Props) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 gap-y-6 p-2">
                 {products?.map((item) => {
                     return (
-                        <div
+                        <Link
+                            onClick={() => getProduct(item)}
+                            to={`/product/${item._id}`}
                             key={item._id}
                             className="relative overflow-hidden group cursor-pointer w-full"
                         >
@@ -62,7 +65,7 @@ function Collection({ products }: Props) {
                                 showImage={item.image[0]}
                                 hiddenImage={item.image[1]}
                             />
-                        </div>
+                        </Link>
                     );
                 })}
             </div>

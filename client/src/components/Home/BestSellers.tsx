@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom';
 import ImageCard from '../shared/ImageCard';
 import Title from '../shared/Title';
 import { useCallback, useEffect, useState } from 'react';
-import type ProductI from '../shared/productType';
+import type ProductI from '../../types/productType';
 import { toast } from 'react-toastify';
+import { useProduct } from '../../context/useProduct';
 
 function BestSellers() {
     const [bestSellers, setBestSellers] = useState<ProductI[] | null>(null);
+    const { getProduct } = useProduct();
 
     // const bestSellerImages = [
     //     {
@@ -68,6 +70,7 @@ function BestSellers() {
                     {bestSellers?.map((product: ProductI) => {
                         return (
                             <Link
+                                onClick={() => getProduct(product)}
                                 to={`/product/${product._id}`}
                                 key={product._id}
                                 className="relative overflow-hidden group cursor-pointer w-full  "
