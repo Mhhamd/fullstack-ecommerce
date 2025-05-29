@@ -4,13 +4,16 @@ import './index.css';
 import App from './App.tsx';
 import { BrowserRouter } from 'react-router-dom';
 import { ProductProvider } from './context/ProductProvider.tsx';
+import { UserProvider } from './context/UserProvider.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <BrowserRouter>
-            <ProductProvider>
-                <App />
-            </ProductProvider>
+            <UserProvider>
+                <ProductProvider>
+                    <App />
+                </ProductProvider>
+            </UserProvider>
         </BrowserRouter>
     </StrictMode>
 );
