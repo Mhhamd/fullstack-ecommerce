@@ -1,14 +1,17 @@
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { CiShoppingCart, CiUser } from 'react-icons/ci';
 import { FaExclamation, FaHome, FaShoppingBag } from 'react-icons/fa';
 import { MdConnectWithoutContact } from 'react-icons/md';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import { IoIosMenu } from 'react-icons/io';
+import { useUser } from '../context/useUser';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+    const navigate = useNavigate();
+    const { token, user } = useUser();
 
     const navLinks = [
         { name: 'HOME', link: '/', icon: <FaHome /> },
@@ -23,6 +26,14 @@ function Header() {
 
     const handleCart = () => {
         setIsCartOpen(!isCartOpen);
+    };
+
+    const handleUserClick = () => {
+        if (token) {
+            navigate(`/profile/${user?._id}`);
+        } else {
+            navigate('/login');
+        }
     };
 
     useEffect(() => {
@@ -108,12 +119,12 @@ function Header() {
                 {/* Right section */}
                 <div className="flex-1 flex justify-end items-center gap-5 text-2xl">
                     {/* User */}
-                    <Link
-                        className="hover:opacity-50 transition-all duration-300"
-                        to={'/login'}
+                    <div
+                        onClick={handleUserClick}
+                        className="hover:opacity-50 transition-all duration-300 cursor-pointer"
                     >
                         <CiUser />
-                    </Link>
+                    </div>
 
                     {/* Cart */}
                     <div
@@ -146,14 +157,32 @@ function Header() {
                                     : 'translate-x-full opacity-0'
                             }`}
                         >
-                            <div className="flex items-center justify-between w-full">
-                                <h1 className="uppercase text-2xl tracking-wide">
-                                    your cart
-                                </h1>
-                                <IoCloseSharp
-                                    onClick={handleCart}
-                                    className="text-2xl hover:opacity-50 transition-all duration-300 cursor-pointer"
-                                />
+                            <div className="flex items-start w-full h-full flex-col">
+                                <div className="flex items-center justify-between w-full">
+                                    <h1 className="uppercase text-2xl tracking-wide">
+                                        your cart
+                                    </h1>
+                                    <IoCloseSharp
+                                        onClick={handleCart}
+                                        className="text-2xl hover:opacity-50 transition-all duration-300 cursor-pointer"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-center w-full h-full">
+                                    {!user ? (
+                                        <p className="text-base text-gray-700">
+                                            You are not logged in
+                                        </p>
+                                    ) : user.cart.length === 0 ? (
+                                        <p className="text-base text-gray-700">
+                                            You don't have items in your cart
+                                        </p>
+                                    ) : (
+                                        // Render cart items here
+                                        <p className="text-base text-gray-700">
+                                            Cart items go here
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
