@@ -11,10 +11,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
 import { ToastContainer } from 'react-toastify';
+import ScrollToTop from './components/shared/ScrollToTop';
 
 function App() {
     return (
         <div>
+            <ScrollToTop />
             <ToastContainer />
             <Header />
             <Routes>
