@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/useUser';
+import AuthForm from '../components/shared/AuthForm';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -10,7 +11,13 @@ function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const { login } = useUser();
+    const { login, isAuthenticated } = useUser();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,9 +47,9 @@ function Login() {
                 return;
             }
 
-            toast.success('Login Successful');
+            toast.success('Login Successful', { autoClose: 5 });
             login(data.token, data.user);
-            navigate('/');
+            navigate('/', { replace: true });
         } catch (error) {
             console.error(error);
             setError('Something went wrong. Please try again later.');
@@ -50,69 +57,36 @@ function Login() {
             setIsLoading(false);
         }
     };
-
     return (
-        <div className="h-[70vh] bg-gray-100 flex flex-col justify-center items-center px-4">
-            <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-2xl ">
-                <div className="mb-6 text-center">
-                    <h1 className="text-3xl font-bold text-gray-800">
-                        MercadoX Login
-                    </h1>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label
-                            htmlFor="email"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            autoComplete="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                            placeholder="you@example.com"
-                        />
-                    </div>
-
-                    <div>
-                        <label
-                            htmlFor="password"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                            placeholder="••••••••"
-                        />
-                    </div>
-
-                    {error && <p className="text-sm text-red-600">{error}</p>}
-
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className={`w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-all duration-300  ${
-                            isLoading
-                                ? 'opacity-50 cursor-not-allowed'
-                                : 'cursor-pointer'
-                        }`}
-                    >
-                        Login
-                    </button>
-                </form>
-            </div>
-        </div>
+        <AuthForm
+            title="Login"
+            onSubmit={handleSubmit}
+            fields={[
+                {
+                    name: 'email',
+                    type: 'email',
+                    placeholder: 'Email',
+                    id: 'email',
+                    value: email,
+                    label: 'Email',
+                    onChange: (e) => setEmail(e.target.value),
+                },
+                {
+                    name: 'password',
+                    id: 'password',
+                    type: 'password',
+                    placeholder: 'Password',
+                    value: password,
+                    label: 'Email',
+                    onChange: (e) => setPassword(e.target.value),
+                },
+            ]}
+            error={error}
+            buttonText="Login"
+            linkText="New New here? Sign up now."
+            linkTo="/register"
+            isLoading={isLoading}
+        />
     );
 }
 

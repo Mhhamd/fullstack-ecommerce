@@ -9,14 +9,18 @@ import Product from './pages/Product';
 import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
+import Register from './pages/Register';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
     return (
         <div>
+            <ToastContainer />
             <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/shop-all" element={<ShopAll />} />
