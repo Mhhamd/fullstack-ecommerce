@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/useUser';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ type Props = {
 function ProtectedRoute({ children }: Props) {
     const { token, logout } = useUser();
     const [isValid, setIsValid] = useState<boolean | null>(null);
+    const toastShownRef = useRef(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,7 +30,12 @@ function ProtectedRoute({ children }: Props) {
                 const data = await res.json();
 
                 if (!data.valid) {
-                    toast.error(data.message || 'Session expired');
+                    if (!toastShownRef.current) {
+                        toast.error(data.message || 'Session expired', {
+                            autoClose: 3000,
+                        });
+                        toastShownRef.current = true;
+                    }
                     logout();
                     navigate('/login');
                     return;

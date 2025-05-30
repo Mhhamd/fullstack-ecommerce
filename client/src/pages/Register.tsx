@@ -55,7 +55,7 @@ function Register() {
                 return;
             }
 
-            toast.success('Account created successfully!', { autoClose: 5 });
+            toast.success('Account created successfully!', { autoClose: 3000 });
             navigate('/login', { replace: true });
         } catch (error) {
             console.error(error);

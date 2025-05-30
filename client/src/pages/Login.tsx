@@ -47,7 +47,7 @@ function Login() {
                 return;
             }
 
-            toast.success('Login Successful', { autoClose: 5 });
+            toast.success('Login Successful', { autoClose: 3000 });
             login(data.token, data.user);
             navigate('/', { replace: true });
         } catch (error) {
