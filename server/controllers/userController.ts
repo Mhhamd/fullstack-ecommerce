@@ -202,7 +202,7 @@ const addToCart = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({
             success: true,
             message: 'Product added to cart',
-            cart: user.cart,
+            updatedUser: user,
         });
     } catch (error) {
         console.error('Error adding to cart:', error);
