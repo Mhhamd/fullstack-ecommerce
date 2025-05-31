@@ -6,6 +6,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import { IoIosMenu } from 'react-icons/io';
 import { useUser } from '../context/useUser';
+import type { CartItem } from '../types/userType';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -36,16 +37,37 @@ function Header() {
         }
     };
 
+    const calculateTotal = () => {
+        if (user) {
+            const total = user.cart.reduce(
+                (acc, item) => acc + item.quantity * item.price,
+                0
+            );
+            return total;
+        }
+    };
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1023 && isMenuOpen) {
                 setIsMenuOpen(false);
             }
         };
+        if (isCartOpen) {
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+        } else {
+            document.body.style.position = '';
+            document.body.style.width = '';
+        }
         handleResize();
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [isMenuOpen]);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            document.body.style.position = '';
+            document.body.style.width = '';
+        };
+    }, [isMenuOpen, isCartOpen]);
 
     return (
         <>
@@ -157,7 +179,7 @@ function Header() {
                                     : 'translate-x-full opacity-0'
                             }`}
                         >
-                            <div className="flex items-start w-full h-full flex-col">
+                            <div className="flex items-start w-full h-full flex-col overflow-y-scroll">
                                 <div className="flex items-center justify-between w-full">
                                     <h1 className="uppercase text-2xl tracking-wide">
                                         your cart
@@ -167,7 +189,7 @@ function Header() {
                                         className="text-2xl hover:opacity-50 transition-all duration-300 cursor-pointer"
                                     />
                                 </div>
-                                <div className="flex items-center justify-center w-full h-full">
+                                <div className="flex items-center justify-center w-full h-full pr-5">
                                     {!user ? (
                                         <p className="text-base text-gray-700">
                                             You are not logged in
@@ -178,9 +200,64 @@ function Header() {
                                         </p>
                                     ) : (
                                         // Render cart items here
-                                        <p className="text-base text-gray-700">
-                                            Cart items go here
-                                        </p>
+                                        <div className=" w-full flex items-start flex-col gap-5 mt-10 h-full">
+                                            {user.cart.map((item: CartItem) => {
+                                                return (
+                                                    <div className="flex items-start gap-5 w-full border py-3 px-3 rounded-lg">
+                                                        <div>
+                                                            <img
+                                                                className="w-15 h-full"
+                                                                src={item.image}
+                                                                alt=""
+                                                            />
+                                                        </div>
+                                                        <div className="flex flex-2 items-start flex-col ">
+                                                            <h4 className="text-black text-lg tracking-wide capitalize">
+                                                                {item.name}
+                                                            </h4>
+                                                            <div>
+                                                                <p className="font-light text-sm">
+                                                                    ${' '}
+                                                                    {item.price}
+                                                                    .00 USD
+                                                                </p>
+                                                                <p className="font-normal text-base ">
+                                                                    Size:{' '}
+                                                                    {item.size}
+                                                                </p>
+                                                            </div>
+                                                            <button className="text-lg cursor-pointer bg-white border p-1 hover:bg-black hover:text-white transition-all duration-300 mt-3 ">
+                                                                Remove
+                                                            </button>
+                                                        </div>
+                                                        <div className="flex items-start justify-center">
+                                                            <input
+                                                                disabled
+                                                                type="number"
+                                                                value={
+                                                                    item.quantity
+                                                                }
+                                                                className="w-10 text-sm py-2 rounded-lg text-center bg-black text-white"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                            <div className="flex items-center text-center flex-col  w-full mx-auto">
+                                                <div className="flex items-center justify-between w-full">
+                                                    <p className="text-lg font-light">
+                                                        Subtotal
+                                                    </p>
+                                                    <p className="text-lg font-medium">
+                                                        ${calculateTotal()}.00
+                                                        USD
+                                                    </p>
+                                                </div>
+                                                <button className="w-full border py-3 font-light text-lg  mt-5 hover:bg-black hover:text-white transition-all duration-300 cursor-pointer">
+                                                    Continue to Checkout
+                                                </button>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
