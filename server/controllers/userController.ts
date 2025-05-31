@@ -210,4 +210,50 @@ const addToCart = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-export { loginUser, registerUser, addToCart };
+const removeFromCart = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { productId, userId } = req.body;
+        if (!userId || !productId) {
+            res.status(400).json({
+                success: false,
+                message: 'userId and productId are required',
+            });
+            return;
+        }
+
+        if (
+            !mongoose.Types.ObjectId.isValid(userId) ||
+            !mongoose.Types.ObjectId.isValid(productId)
+        ) {
+            res.status(400).json({
+                success: false,
+                message: 'invalid userId or productId',
+            });
+            return;
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+
+        user.cart = user.cart.filter(
+            (item: any) => item.productId.toString() !== productId
+        );
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Product removed from cart',
+            updatedUser: user,
+        });
+    } catch (error) {
+        console.error('Error removing from cart:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+export { loginUser, registerUser, addToCart, removeFromCart };
