@@ -28,11 +28,16 @@ export const UserProvider = ({ children }: Props) => {
         setUser(null);
     };
 
+    const updateUser = (updatedUser: UserI) => {
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+    };
+
     const isAuthenticated = !!token;
 
     return (
         <UserContext.Provider
-            value={{ login, logout, user, token, isAuthenticated }}
+            value={{ login, logout, updateUser, user, token, isAuthenticated }}
         >
             {children}
         </UserContext.Provider>

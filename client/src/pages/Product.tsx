@@ -1,13 +1,87 @@
+import { useState, type FormEvent } from 'react';
 import BestSellers from '../components/Home/BestSellers';
 import ProductBenefits from '../components/Product/ProductBenefits';
 import ProductReviews from '../components/Product/ProductReviews';
 import { useProduct } from '../context/useProduct';
+import { toast } from 'react-toastify';
+import { useUser } from '../context/useUser';
+import { useNavigate } from 'react-router-dom';
 
 function Product() {
     const { currentProduct } = useProduct();
+    const { user, updateUser, isAuthenticated, token } = useUser();
+    const [size, setSize] = useState<string>('');
+    const [quantity, setQuantity] = useState<string>('1');
+    const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        setError('');
+        if (!size) {
+            setError('Please select a size');
+            return;
+        }
+        if (Number(quantity) <= 0) {
+            setError('Quantity must be at least 1');
+            return;
+        }
+        if (!isAuthenticated) {
+            toast.error('You must be logged in', { autoClose: 3000 });
+            navigate('/login');
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const res = await fetch(
+                'http://localhost:3500/api/user/add-to-cart',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        size,
+                        quantity,
+                        userId: user?._id,
+                        productId: currentProduct?._id,
+                    }),
+                }
+            );
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.message || 'Something went wrong', {
+                    autoClose: 3000,
+                });
+                return;
+            }
+            updateUser(data.updatedUser);
+            toast.success('Product added successfully.', { autoClose: 3000 });
+        } catch (error) {
+            console.error(error);
+            toast.error('Failed to add the product to the cart', {
+                autoClose: 3000,
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
     return (
         <>
-            <div className=" w-screen pt-15 sm:px-10 px-5">
+            {!currentProduct && (
+                <div className="text-center text-2xl mt-10">
+                    Product not found.
+                </div>
+            )}
+            <form
+                onSubmit={handleSubmit}
+                className=" w-screen pt-15 sm:px-10 px-5"
+            >
                 <div className="flex items-start justify-between w-full gap-10 sticky top-5 lg:gap-20 lg:flex-row flex-col">
                     {/* Left section images */}
                     <div className="flex items-center flex-col gap-5 w-full">
@@ -48,22 +122,58 @@ function Product() {
                             </div>
                             {/* Quantity */}
                             <div className="flex items-center justify-between border w-full lg:w-130 py-2 px-2 mt-5">
-                                <div className="border w-16 ">
-                                    <input
-                                        type="number"
-                                        defaultValue={1}
-                                        min={1}
-                                        className="w-full px-2 py-2 outline-0"
-                                    />
+                                <div className=" flex items-center gap-3 ">
+                                    <div>
+                                        <input
+                                            value={quantity}
+                                            onChange={(e) =>
+                                                setQuantity(e.target.value)
+                                            }
+                                            type="number"
+                                            min={1}
+                                            className="w-16 px-2 border py-2 outline-0"
+                                        />
+                                    </div>
+                                    <div className="border">
+                                        <select
+                                            value={size}
+                                            onChange={(e) =>
+                                                setSize(e.target.value)
+                                            }
+                                            className="w-full px-5 py-2"
+                                        >
+                                            <option value="" disabled hidden>
+                                                Select Size
+                                            </option>
+                                            <option value="S">S</option>
+                                            <option value="M">M</option>
+                                            <option value="L">L</option>
+                                            <option value="XL">XL</option>
+                                            <option value="XXL">XXL</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 {/* add to cart button */}
                                 <div>
-                                    <button className="uppercase tracking-wide border bg-black text-white text-center py-4 px-10 hover:bg-white hover:text-black cursor-pointer transition-all duration-300">
+                                    <button
+                                        disabled={isLoading}
+                                        type="submit"
+                                        className={`uppercase tracking-wide border bg-black text-white text-center py-4 px-10 hover:bg-white hover:text-black transition-all duration-300 ${
+                                            isLoading
+                                                ? 'opacity-50 cursor-not-allowed '
+                                                : 'cursor-pointer'
+                                        }`}
+                                    >
                                         add to cart
                                     </button>
                                 </div>
                             </div>
+                            {error && (
+                                <p className="text-red-600 text-3xl tracking-wide ">
+                                    {error}
+                                </p>
+                            )}
                         </div>
                         {/* Product Sub details */}
                         <div className="flex items-start w-full flex-col gap-3">
@@ -126,7 +236,7 @@ function Product() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
             <ProductBenefits />
             <ProductReviews />
             <div>

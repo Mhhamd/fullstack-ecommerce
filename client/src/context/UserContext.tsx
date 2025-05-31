@@ -6,6 +6,7 @@ export interface UserContextType {
     token: string | null;
     login: (token: string, user: UserI) => void;
     logout: () => void;
+    updateUser: (user: UserI) => void;
     isAuthenticated: boolean;
 }
 
