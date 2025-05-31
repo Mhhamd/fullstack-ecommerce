@@ -7,12 +7,14 @@ import { useEffect, useState } from 'react';
 import { IoIosMenu } from 'react-icons/io';
 import { useUser } from '../context/useUser';
 import type { CartItem } from '../types/userType';
+import { toast } from 'react-toastify';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate();
-    const { token, user } = useUser();
+    const { token, user, updateUser } = useUser();
 
     const navLinks = [
         { name: 'HOME', link: '/', icon: <FaHome /> },
@@ -44,6 +46,38 @@ function Header() {
                 0
             );
             return total;
+        }
+    };
+
+    const handleProductDelete = async (productId: string) => {
+        setIsLoading(true);
+        try {
+            const res = await fetch(
+                'http://localhost:3500/api/user/remove-from-cart',
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ productId, userId: user?._id }),
+                }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.message || 'Something went wrong');
+                return;
+            }
+
+            toast.success('Product deleted');
+            updateUser(data.updatedUser);
+        } catch (error) {
+            console.error(error);
+            toast.error('an error occurred when deleting the product');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -158,7 +192,7 @@ function Header() {
                             className="absolute right-[-7px] bottom-[-5px] w-4
                      text-center leading-4 bg-black text-white text-[8px] rounded-full"
                         >
-                            0
+                            {user ? user.cart.length : 0}
                         </p>
                     </div>
 
@@ -200,44 +234,70 @@ function Header() {
                                         </p>
                                     ) : (
                                         // Render cart items here
-                                        <div className=" w-full flex items-start flex-col gap-5 mt-10 h-full">
+                                        <div className="w-full flex items-start flex-col gap-5 mt-10 h-full">
                                             {user.cart.map((item: CartItem) => {
                                                 return (
-                                                    <div className="flex items-start gap-5 w-full border py-3 px-3 rounded-lg">
-                                                        <div>
+                                                    <div
+                                                        key={item.productId} // Don't forget to add a unique key
+                                                        className={`flex flex-col sm:flex-row items-start gap-3 sm:gap-5 w-full border py-3 px-3 rounded-lg ${
+                                                            isLoading
+                                                                ? 'opacity-50'
+                                                                : ''
+                                                        }`}
+                                                    >
+                                                        {/* Product Image */}
+                                                        <div className="w-full sm:w-20 flex-shrink-0">
                                                             <img
-                                                                className="w-15 h-full"
+                                                                className="w-full h-auto sm:w-20 sm:h-20 object-cover"
                                                                 src={item.image}
-                                                                alt=""
+                                                                alt={item.name}
                                                             />
                                                         </div>
-                                                        <div className="flex flex-2 items-start flex-col ">
+
+                                                        {/* Product Info */}
+                                                        <div className="flex-1 w-full">
                                                             <h4 className="text-black text-lg tracking-wide capitalize">
                                                                 {item.name}
                                                             </h4>
-                                                            <div>
+                                                            <div className="mt-1">
                                                                 <p className="font-light text-sm">
                                                                     ${' '}
                                                                     {item.price}
                                                                     .00 USD
                                                                 </p>
-                                                                <p className="font-normal text-base ">
+                                                                <p className="font-normal text-sm sm:text-base">
                                                                     Size:{' '}
                                                                     {item.size}
                                                                 </p>
                                                             </div>
-                                                            <button className="text-lg cursor-pointer bg-white border p-1 hover:bg-black hover:text-white transition-all duration-300 mt-3 ">
+                                                            <button
+                                                                disabled={
+                                                                    isLoading
+                                                                }
+                                                                onClick={() =>
+                                                                    handleProductDelete(
+                                                                        item.productId
+                                                                    )
+                                                                }
+                                                                className={`text-sm sm:text-base bg-white border p-1 hover:bg-black hover:text-white transition-all duration-300 mt-2 sm:mt-3 ${
+                                                                    isLoading
+                                                                        ? 'opacity-50 cursor-not-allowed'
+                                                                        : 'cursor-pointer'
+                                                                }`}
+                                                            >
                                                                 Remove
                                                             </button>
                                                         </div>
-                                                        <div className="flex items-start justify-center">
+
+                                                        {/* Quantity */}
+                                                        <div className="self-end sm:self-start">
                                                             <input
                                                                 disabled
                                                                 type="number"
                                                                 value={
                                                                     item.quantity
                                                                 }
-                                                                className="w-10 text-sm py-2 rounded-lg text-center bg-black text-white"
+                                                                className="w-10 sm:w-12 text-sm py-2 rounded-lg text-center bg-black text-white"
                                                             />
                                                         </div>
                                                     </div>
