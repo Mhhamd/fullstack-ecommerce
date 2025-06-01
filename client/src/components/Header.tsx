@@ -32,14 +32,6 @@ function Header() {
         setIsCartOpen(!isCartOpen);
     };
 
-    const handleUserClick = () => {
-        if (token) {
-            navigate(`/profile/${user?._id}`);
-        } else {
-            navigate('/login');
-        }
-    };
-
     const calculateTotal = () => {
         if (user) {
             const total = user.cart.reduce(
@@ -181,10 +173,13 @@ function Header() {
                     {/* User */}
 
                     <div className="flex items-center gap-5">
-                        <CiUser
-                            className="hover:opacity-50 transition-all duration-300 cursor-pointer "
-                            onClick={handleUserClick}
-                        />
+                        {user ? null : (
+                            <CiUser
+                                onClick={() => navigate('/login')}
+                                className="hover:opacity-50 transition-all duration-300 cursor-pointer "
+                            />
+                        )}
+
                         {user ? (
                             <IoIosLogOut
                                 onClick={() => {
@@ -230,7 +225,7 @@ function Header() {
                                     : 'translate-x-full opacity-0'
                             }`}
                         >
-                            <div className="flex items-start w-full h-full flex-col overflow-y-scroll">
+                            <div className="flex items-start w-full h-full flex-col">
                                 <div className="flex items-center justify-between w-full">
                                     <h1 className="uppercase text-2xl tracking-wide">
                                         your cart
@@ -254,7 +249,14 @@ function Header() {
                                         </p>
                                     ) : (
                                         // Render cart items
-                                        <div className="w-full flex items-start flex-col gap-5 mt-10 h-full">
+                                        <div
+                                            style={{
+                                                overflowY: 'auto',
+                                                scrollbarWidth: 'thin',
+                                                scrollbarGutter: 'stable',
+                                            }}
+                                            className="w-full flex items-start flex-col gap-5 mt-10 h-full pb-10 "
+                                        >
                                             {user.cart.map(
                                                 (item: CartItem, index) => {
                                                     return (
