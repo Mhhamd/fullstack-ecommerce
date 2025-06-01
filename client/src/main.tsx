@@ -5,13 +5,16 @@ import App from './App.tsx';
 import { BrowserRouter } from 'react-router-dom';
 import { ProductProvider } from './context/ProductProvider.tsx';
 import { UserProvider } from './context/UserProvider.tsx';
+import { FilterProvider } from './context/FilterProvider.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <BrowserRouter>
             <UserProvider>
                 <ProductProvider>
-                    <App />
+                    <FilterProvider>
+                        <App />
+                    </FilterProvider>
                 </ProductProvider>
             </UserProvider>
         </BrowserRouter>

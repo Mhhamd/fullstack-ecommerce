@@ -1,5 +1,8 @@
+import { useNavigate } from 'react-router-dom';
+
 function Hero() {
     const currentYear = new Date().getFullYear();
+    const navigate = useNavigate();
     return (
         <div className="w-screen flex flex-col lg:flex-row overflow-hidden">
             {/* Left side */}
@@ -13,6 +16,7 @@ function Hero() {
                     Summer {currentYear}
                 </h1>
                 <button
+                    onClick={() => navigate('/shop-all')}
                     className="bg-white text-center text-black w-45 h-15 hover:bg-black hover:text-white transition-all duration-300 border border-white cursor-pointer mt-8 active:bg-black active:text-white
                      "
                 >

@@ -250,13 +250,13 @@ function Header() {
                                             You don't have items in your cart
                                         </p>
                                     ) : (
-                                        // Render cart items here
+                                        // Render cart items
                                         <div className="w-full flex items-start flex-col gap-5 mt-10 h-full">
                                             {user.cart.map(
                                                 (item: CartItem, index) => {
                                                     return (
                                                         <div
-                                                            key={index} // Don't forget to add a unique key
+                                                            key={index}
                                                             className={`flex flex-col sm:flex-row items-start gap-3 sm:gap-5 w-full border py-3 px-3 rounded-lg ${
                                                                 isLoading
                                                                     ? 'opacity-50'
@@ -316,7 +316,7 @@ function Header() {
                                                             </div>
 
                                                             {/* Quantity */}
-                                                            <div className="self-end sm:self-start">
+                                                            <div className="self-start">
                                                                 <input
                                                                     disabled
                                                                     type="number"

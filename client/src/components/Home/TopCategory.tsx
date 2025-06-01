@@ -4,24 +4,30 @@ import {
     MouseParallaxContainer,
     MouseParallaxChild,
 } from 'react-parallax-mouse';
+import useFilter from '../../context/useFilter';
 
 function TopCategory() {
+    const { handleCategoryChange } = useFilter();
     const topCategoryImages = [
         {
             image: '/images/category_men.jpg',
             category: 'Men',
+            onClickEvent: () => handleCategoryChange('men'),
             className:
                 'object-center object-cover  w-full border sm:border-r sm:border-r-2',
         },
         {
-            image: '/images/category_women.jpg',
+            image: '/images/category_women.png',
             category: 'Women',
+            onClickEvent: () => handleCategoryChange('women'),
+
             className:
                 'object-center object-cover  w-full border sm:border-r sm:border-r-2',
         },
         {
-            image: '/images/category_shoes.jpg',
-            category: 'Shoes',
+            image: '/images/category_kid.jpg',
+            category: 'Kids',
+            onClickEvent: () => handleCategoryChange('kids'),
             className: 'object-center object-cover w-full  ',
         },
     ];
@@ -32,7 +38,12 @@ function TopCategory() {
             <div className="flex w-full items-center justify-center border-black mt-7 lg:flex-row flex-col gap-y-2">
                 {topCategoryImages.map((item) => {
                     return (
-                        <Link className="w-full" key={item.category} to={'/'}>
+                        <Link
+                            onClick={() => item.onClickEvent()}
+                            className="w-full"
+                            key={item.category}
+                            to={'/shop-all'}
+                        >
                             <MouseParallaxContainer
                                 globalFactorX={0.1}
                                 globalFactorY={0.1}
