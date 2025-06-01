@@ -4,7 +4,7 @@ import { FaExclamation, FaHome, FaShoppingBag } from 'react-icons/fa';
 import { MdConnectWithoutContact } from 'react-icons/md';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
-import { IoIosMenu } from 'react-icons/io';
+import { IoIosLogOut, IoIosMenu } from 'react-icons/io';
 import { useUser } from '../context/useUser';
 import type { CartItem } from '../types/userType';
 import { toast } from 'react-toastify';
@@ -13,8 +13,9 @@ function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
     const navigate = useNavigate();
-    const { token, user, updateUser } = useUser();
+    const { token, user, updateUser, logout } = useUser();
 
     const navLinks = [
         { name: 'HOME', link: '/', icon: <FaHome /> },
@@ -175,11 +176,21 @@ function Header() {
                 {/* Right section */}
                 <div className="flex-1 flex justify-end items-center gap-5 text-2xl">
                     {/* User */}
-                    <div
-                        onClick={handleUserClick}
-                        className="hover:opacity-50 transition-all duration-300 cursor-pointer"
-                    >
-                        <CiUser />
+
+                    <div className="flex items-center gap-5">
+                        <CiUser
+                            className="hover:opacity-50 transition-all duration-300 cursor-pointer "
+                            onClick={handleUserClick}
+                        />
+                        {user ? (
+                            <IoIosLogOut
+                                onClick={() => {
+                                    logout();
+                                    navigate('/login');
+                                }}
+                                className="hover:opacity-50 transition-all duration-300 cursor-pointer "
+                            />
+                        ) : null}
                     </div>
 
                     {/* Cart */}
@@ -198,7 +209,10 @@ function Header() {
 
                     {/* Cart sidebar */}
                     <div
-                        onClick={handleCart}
+                        onClick={() => {
+                            handleCart();
+                            setError('');
+                        }}
                         className={`fixed inset-0 bg-black/50 z-[100] transition-all duration-300 ${
                             isCartOpen
                                 ? 'opacity-100'
@@ -219,7 +233,10 @@ function Header() {
                                         your cart
                                     </h1>
                                     <IoCloseSharp
-                                        onClick={handleCart}
+                                        onClick={() => {
+                                            handleCart();
+                                            setError('');
+                                        }}
                                         className="text-2xl hover:opacity-50 transition-all duration-300 cursor-pointer"
                                     />
                                 </div>
@@ -235,74 +252,84 @@ function Header() {
                                     ) : (
                                         // Render cart items here
                                         <div className="w-full flex items-start flex-col gap-5 mt-10 h-full">
-                                            {user.cart.map((item: CartItem) => {
-                                                return (
-                                                    <div
-                                                        key={item.productId} // Don't forget to add a unique key
-                                                        className={`flex flex-col sm:flex-row items-start gap-3 sm:gap-5 w-full border py-3 px-3 rounded-lg ${
-                                                            isLoading
-                                                                ? 'opacity-50'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        {/* Product Image */}
-                                                        <div className="w-full sm:w-20 flex-shrink-0">
-                                                            <img
-                                                                className="w-full h-auto sm:w-20 sm:h-20 object-cover"
-                                                                src={item.image}
-                                                                alt={item.name}
-                                                            />
-                                                        </div>
-
-                                                        {/* Product Info */}
-                                                        <div className="flex-1 w-full">
-                                                            <h4 className="text-black text-lg tracking-wide capitalize">
-                                                                {item.name}
-                                                            </h4>
-                                                            <div className="mt-1">
-                                                                <p className="font-light text-sm">
-                                                                    ${' '}
-                                                                    {item.price}
-                                                                    .00 USD
-                                                                </p>
-                                                                <p className="font-normal text-sm sm:text-base">
-                                                                    Size:{' '}
-                                                                    {item.size}
-                                                                </p>
+                                            {user.cart.map(
+                                                (item: CartItem, index) => {
+                                                    return (
+                                                        <div
+                                                            key={index} // Don't forget to add a unique key
+                                                            className={`flex flex-col sm:flex-row items-start gap-3 sm:gap-5 w-full border py-3 px-3 rounded-lg ${
+                                                                isLoading
+                                                                    ? 'opacity-50'
+                                                                    : ''
+                                                            }`}
+                                                        >
+                                                            {/* Product Image */}
+                                                            <div className="w-full sm:w-20 flex-shrink-0">
+                                                                <img
+                                                                    className="w-full h-auto sm:w-20 sm:h-20 object-cover"
+                                                                    src={
+                                                                        item.image
+                                                                    }
+                                                                    alt={
+                                                                        item.name
+                                                                    }
+                                                                />
                                                             </div>
-                                                            <button
-                                                                disabled={
-                                                                    isLoading
-                                                                }
-                                                                onClick={() =>
-                                                                    handleProductDelete(
-                                                                        item.productId
-                                                                    )
-                                                                }
-                                                                className={`text-sm sm:text-base bg-white border p-1 hover:bg-black hover:text-white transition-all duration-300 mt-2 sm:mt-3 ${
-                                                                    isLoading
-                                                                        ? 'opacity-50 cursor-not-allowed'
-                                                                        : 'cursor-pointer'
-                                                                }`}
-                                                            >
-                                                                Remove
-                                                            </button>
-                                                        </div>
 
-                                                        {/* Quantity */}
-                                                        <div className="self-end sm:self-start">
-                                                            <input
-                                                                disabled
-                                                                type="number"
-                                                                value={
-                                                                    item.quantity
-                                                                }
-                                                                className="w-10 sm:w-12 text-sm py-2 rounded-lg text-center bg-black text-white"
-                                                            />
+                                                            {/* Product Info */}
+                                                            <div className="flex-1 w-full">
+                                                                <h4 className="text-black text-lg tracking-wide capitalize">
+                                                                    {item.name}
+                                                                </h4>
+                                                                <div className="mt-1">
+                                                                    <p className="font-light text-sm">
+                                                                        ${' '}
+                                                                        {
+                                                                            item.price
+                                                                        }
+                                                                        .00 USD
+                                                                    </p>
+                                                                    <p className="font-normal text-sm sm:text-base">
+                                                                        Size:{' '}
+                                                                        {
+                                                                            item.size
+                                                                        }
+                                                                    </p>
+                                                                </div>
+                                                                <button
+                                                                    disabled={
+                                                                        isLoading
+                                                                    }
+                                                                    onClick={() =>
+                                                                        handleProductDelete(
+                                                                            item.productId
+                                                                        )
+                                                                    }
+                                                                    className={`text-sm sm:text-base bg-white border p-1 hover:bg-black hover:text-white transition-all duration-300 mt-2 sm:mt-3 ${
+                                                                        isLoading
+                                                                            ? 'opacity-50 cursor-not-allowed'
+                                                                            : 'cursor-pointer'
+                                                                    }`}
+                                                                >
+                                                                    Remove
+                                                                </button>
+                                                            </div>
+
+                                                            {/* Quantity */}
+                                                            <div className="self-end sm:self-start">
+                                                                <input
+                                                                    disabled
+                                                                    type="number"
+                                                                    value={
+                                                                        item.quantity
+                                                                    }
+                                                                    className="w-10 sm:w-12 text-sm py-2 rounded-lg text-center bg-black text-white"
+                                                                />
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                );
-                                            })}
+                                                    );
+                                                }
+                                            )}
                                             <div className="flex items-center text-center flex-col  w-full mx-auto">
                                                 <div className="flex items-center justify-between w-full">
                                                     <p className="text-lg font-light">
@@ -313,9 +340,26 @@ function Header() {
                                                         USD
                                                     </p>
                                                 </div>
-                                                <button className="w-full border py-3 font-light text-lg  mt-5 hover:bg-black hover:text-white transition-all duration-300 cursor-pointer">
-                                                    Continue to Checkout
-                                                </button>
+                                                {user.cart.length > 0 && (
+                                                    <button
+                                                        onClick={() =>
+                                                            setError(
+                                                                'Checkout is disabled on this site.'
+                                                            )
+                                                        }
+                                                        className="w-full border py-3 font-light text-lg  mt-5 hover:bg-black hover:text-white transition-all duration-300 cursor-pointer"
+                                                    >
+                                                        Continue to Checkout
+                                                    </button>
+                                                )}
+                                                {error && user ? (
+                                                    <p className="text-base self-start text-left px-3 bg-[#ffdede] w-full mt-3 py-2">
+                                                        Checkout is disabled on
+                                                        this site.
+                                                    </p>
+                                                ) : (
+                                                    ''
+                                                )}
                                             </div>
                                         </div>
                                     )}
