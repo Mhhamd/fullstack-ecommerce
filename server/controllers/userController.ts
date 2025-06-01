@@ -212,8 +212,8 @@ const addToCart = async (req: Request, res: Response): Promise<void> => {
 
 const removeFromCart = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { productId, userId } = req.body;
-        if (!userId || !productId) {
+        const { cartItemId, userId } = req.body;
+        if (!userId || !cartItemId) {
             res.status(400).json({
                 success: false,
                 message: 'userId and productId are required',
@@ -223,7 +223,7 @@ const removeFromCart = async (req: Request, res: Response): Promise<void> => {
 
         if (
             !mongoose.Types.ObjectId.isValid(userId) ||
-            !mongoose.Types.ObjectId.isValid(productId)
+            !mongoose.Types.ObjectId.isValid(cartItemId)
         ) {
             res.status(400).json({
                 success: false,
@@ -238,10 +238,11 @@ const removeFromCart = async (req: Request, res: Response): Promise<void> => {
                 success: false,
                 message: 'User not found',
             });
+            return;
         }
 
         user.cart = user.cart.filter(
-            (item: any) => item.productId.toString() !== productId
+            (item: any) => item._id.toString() !== cartItemId
         );
         await user.save();
 

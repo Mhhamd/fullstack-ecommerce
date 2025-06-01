@@ -50,7 +50,7 @@ function Header() {
         }
     };
 
-    const handleProductDelete = async (productId: string) => {
+    const handleProductDelete = async (cartItemId: string) => {
         setIsLoading(true);
         try {
             const res = await fetch(
@@ -61,7 +61,10 @@ function Header() {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ productId, userId: user?._id }),
+                    body: JSON.stringify({
+                        cartItemId,
+                        userId: user?._id,
+                    }),
                 }
             );
 
@@ -302,7 +305,7 @@ function Header() {
                                                                     }
                                                                     onClick={() =>
                                                                         handleProductDelete(
-                                                                            item.productId
+                                                                            item._id
                                                                         )
                                                                     }
                                                                     className={`text-sm sm:text-base bg-white border p-1 hover:bg-black hover:text-white transition-all duration-300 mt-2 sm:mt-3 ${

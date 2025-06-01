@@ -5,6 +5,7 @@ export interface CartItem {
     quantity: number;
     price: number;
     image: string;
+    _id: string;
 }
 
 export default interface UserI {
