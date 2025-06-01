@@ -7,8 +7,6 @@ import Contact from './pages/Contact';
 import ShopAll from './pages/ShopAll';
 import Product from './pages/Product';
 import Login from './pages/Login';
-import ProtectedRoute from './components/ProtectedRoute';
-import Profile from './pages/Profile';
 import Register from './pages/Register';
 import { ToastContainer } from 'react-toastify';
 import ScrollToTop from './components/shared/ScrollToTop';
@@ -27,14 +25,6 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/shop-all" element={<ShopAll />} />
                 <Route path="/product/:id" element={<Product />} />
-                <Route
-                    path="/profile/:id"
-                    element={
-                        <ProtectedRoute>
-                            <Profile />
-                        </ProtectedRoute>
-                    }
-                />
             </Routes>
             <Footer />
         </div>

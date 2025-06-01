@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Product() {
     const { currentProduct } = useProduct();
-    const { user, updateUser, isAuthenticated, token } = useUser();
+    const { user, updateUser, logout, isAuthenticated, token } = useUser();
     const [size, setSize] = useState<string>('');
     const [quantity, setQuantity] = useState<string>('1');
     const [error, setError] = useState<string>('');
@@ -53,6 +53,15 @@ function Product() {
                 }
             );
             const data = await res.json();
+
+            if (res.status === 401) {
+                toast.error('Session expired', { autoClose: 3000 });
+                setTimeout(() => {
+                    logout();
+                    navigate('/login');
+                }, 3500);
+                return;
+            }
 
             if (!res.ok) {
                 toast.error(data.message || 'Something went wrong', {
