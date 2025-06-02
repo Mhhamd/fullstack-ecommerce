@@ -6,10 +6,19 @@ import { useProduct } from '../context/useProduct';
 import { toast } from 'react-toastify';
 import { useUser } from '../context/useUser';
 import { useNavigate } from 'react-router-dom';
+import Lightbox from 'yet-another-react-lightbox';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
+import 'yet-another-react-lightbox/styles.css';
 
 function Product() {
     const { currentProduct } = useProduct();
     const { user, updateUser, logout, isAuthenticated, token } = useUser();
+
+    const [open, setOpen] = useState<boolean>(false);
+    const [photoIndex, setPhotoIndex] = useState<number>(0);
+
     const [size, setSize] = useState<string>('');
     const [quantity, setQuantity] = useState<string>('1');
     const [error, setError] = useState<string>('');
@@ -94,16 +103,39 @@ function Product() {
                 <div className="flex items-start justify-between w-full gap-10 sticky top-5 lg:gap-20 lg:flex-row flex-col">
                     {/* Left section images */}
                     <div className="flex items-center flex-col gap-5 w-full">
-                        {currentProduct?.image.map((imageURL) => {
+                        {currentProduct?.image.map((imageURL, idx) => {
                             return (
-                                <img
-                                    key={imageURL}
-                                    className="border cursor-pointer w-150 lg:w-full"
-                                    src={imageURL}
-                                    alt=""
-                                />
+                                <div key={imageURL}>
+                                    <img
+                                        onClick={() => {
+                                            setOpen(true);
+                                            setPhotoIndex(idx);
+                                        }}
+                                        className="border cursor-pointer w-150 lg:w-full"
+                                        src={imageURL}
+                                        alt=""
+                                    />
+                                </div>
                             );
                         })}
+                        <Lightbox
+                            open={open}
+                            close={() => setOpen(false)}
+                            index={photoIndex}
+                            plugins={[Zoom, Thumbnails]}
+                            slides={currentProduct?.image.map((src) => ({
+                                src,
+                            }))}
+                            thumbnails={{
+                                position: 'bottom', // Position thumbnails at the bottom
+                                width: 80, // Thumbnail width
+                                height: 60, // Thumbnail height
+                                borderRadius: 4, // Border radius
+                                padding: 4, // Padding around thumbnails
+                                gap: 8, // Gap between thumbnails
+                                border: 0,
+                            }}
+                        />
                     </div>
 
                     {/* Right section details */}
@@ -130,8 +162,8 @@ function Product() {
                                 </p>
                             </div>
                             {/* Quantity */}
-                            <div className="flex items-center justify-between border w-full lg:w-130 py-2 px-2 mt-5">
-                                <div className=" flex items-center gap-3 ">
+                            <div className="flex sm:items-center items-start justify-between sm:flex-row flex-col border w-full lg:w-130 py-2 px-2 mt-5">
+                                <div className=" flex sm:flex-row flex-col items-start  sm:items-center gap-3 ">
                                     <div>
                                         <input
                                             value={quantity}
@@ -168,7 +200,7 @@ function Product() {
                                     <button
                                         disabled={isLoading}
                                         type="submit"
-                                        className={`uppercase tracking-wide border bg-black text-white text-center py-4 px-10 hover:bg-white hover:text-black transition-all duration-300 ${
+                                        className={`uppercase tracking-wide border bg-black text-white text-center sm:mt-0 mt-5 py-4 px-10 hover:bg-white hover:text-black transition-all duration-300 ${
                                             isLoading
                                                 ? 'opacity-50 cursor-not-allowed '
                                                 : 'cursor-pointer'
