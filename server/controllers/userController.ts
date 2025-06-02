@@ -56,7 +56,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
             { _id: existingUser._id, role: existingUser.role },
             tokenSecret,
             {
-                expiresIn: '100s',
+                expiresIn: '2h',
             }
         );
         res.status(200)
