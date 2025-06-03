@@ -22,7 +22,7 @@ function BestSellers() {
             }
             const filteredProducts = data.products
                 .filter((item: ProductI) => item.bestSeller)
-                .slice(0, 4);
+                .slice(-4);
             setBestSellers(filteredProducts);
         } catch (error) {
             console.error(error);

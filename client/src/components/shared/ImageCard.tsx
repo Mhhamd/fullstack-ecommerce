@@ -15,6 +15,7 @@ function ImageCard({ showImage, hiddenImage, productName, price }: ImageProps) {
                     className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0 z-10"
                 />
                 <img
+                    loading="lazy"
                     src={hiddenImage}
                     alt={`${productName} alternate`}
                     className="w-full h-full object-cover"
