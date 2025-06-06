@@ -26,11 +26,6 @@ app.use('/api/protected', protectedRoute);
 app.use('/api/product/', productRoute);
 app.use('/api/user/', userRoute);
 
-// Start Server - only when not in Vercel environment
-if (process.env.VERCEL_ENV !== 'production') {
-    const port = process.env.PORT || 3500;
-    app.listen(port, () => console.log('Server is running on ', port));
-}
-
-// Export for Vercel
-export default app;
+// Start Server
+const port = process.env.PORT || 3500;
+app.listen(port, () => console.log('server is running on ', port));
