@@ -11,15 +11,14 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(
-    cors({
-        origin: ['http://localhost:5174', 'http://localhost:5173'],
-        credentials: true,
-    })
-);
+app.use(cors());
 
 // Connect to Database
 connectDB();
+
+app.get('/', (req, res) => {
+    res.send('Server is working');
+});
 
 // Routes
 app.use('/api/protected', protectedRoute);
