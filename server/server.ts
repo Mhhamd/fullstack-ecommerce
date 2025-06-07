@@ -25,30 +25,14 @@ app.use(
     })
 );
 
-const startServer = async () => {
-    try {
-        await connectDB();
-        console.log('Database connected successfully');
+connectDB();
+// Routes
+app.get('/', (req, res) => {
+    res.send('Server is working');
+});
 
-        // Routes
-        app.get('/', (req, res) => {
-            res.send('Server is working');
-        });
-
-        app.use('/api/protected', protectedRoute);
-        app.use('/api/product/', productRoute);
-        app.use('/api/user/', userRoute);
-
-        const PORT = process.env.PORT || 5000;
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error('Failed to start server:', error);
-        process.exit(1);
-    }
-};
-
-startServer();
+app.use('/api/protected', protectedRoute);
+app.use('/api/product/', productRoute);
+app.use('/api/user/', userRoute);
 
 export default app;
