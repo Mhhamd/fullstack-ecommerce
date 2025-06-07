@@ -28,3 +28,5 @@ app.use('/api/user/', userRoute);
 // Start Server
 const port = process.env.PORT || 3500;
 app.listen(port, () => console.log('server is running on ', port));
+
+export default app;
