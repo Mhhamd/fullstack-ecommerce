@@ -10,7 +10,13 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json());
+app.use(
+    cors({
+        origin: 'https://mercadoxfrontend.vercel.app/',
+        credentials: true,
+    })
+);
+
 app.use(cors());
 
 // Connect to Database
