@@ -44,21 +44,20 @@ function Header() {
 
     const handleProductDelete = async (cartItemId: string) => {
         setIsLoading(true);
+        const API_BASE = import.meta.env.VITE_API_URL;
+
         try {
-            const res = await fetch(
-                'http://localhost:3500/api/user/remove-from-cart',
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        cartItemId,
-                        userId: user?._id,
-                    }),
-                }
-            );
+            const res = await fetch(`${API_BASE}/api/user/remove-from-cart`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    cartItemId,
+                    userId: user?._id,
+                }),
+            });
 
             const data = await res.json();
 

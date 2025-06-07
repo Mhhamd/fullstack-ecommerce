@@ -24,6 +24,7 @@ function Product() {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate();
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -45,22 +46,19 @@ function Product() {
         setIsLoading(true);
 
         try {
-            const res = await fetch(
-                'http://localhost:3500/api/user/add-to-cart',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        size,
-                        quantity,
-                        userId: user?._id,
-                        productId: currentProduct?._id,
-                    }),
-                }
-            );
+            const res = await fetch(`${API_BASE}/api/user/add-to-cart`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    size,
+                    quantity,
+                    userId: user?._id,
+                    productId: currentProduct?._id,
+                }),
+            });
             const data = await res.json();
 
             if (res.status === 401) {

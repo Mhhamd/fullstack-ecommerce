@@ -12,7 +12,7 @@ function Login() {
     const navigate = useNavigate();
 
     const { login, isAuthenticated } = useUser();
-
+    const API_BASE = import.meta.env.VITE_API_URL;
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/', { replace: true });
@@ -34,7 +34,7 @@ function Login() {
 
         setIsLoading(true);
         try {
-            const res = await fetch('http://localhost:3500/api/user/login', {
+            const res = await fetch(`${API_BASE}/api/user/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import { ProductContext } from './ProductContext';
 type Props = {
     children: React.ReactNode;
 };
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export const ProductProvider = ({ children }: Props) => {
     const [products, setProducts] = useState<ProductI[]>([]);
@@ -18,9 +19,7 @@ export const ProductProvider = ({ children }: Props) => {
 
     const getAllProducts = useCallback(async () => {
         try {
-            const res = await fetch(
-                'http://localhost:3500/api/product/get-all-products'
-            );
+            const res = await fetch(`${API_BASE}/api/product/get-all-products`);
             const data = await res.json();
             if (!res.ok) {
                 toast.error(data.message || 'Something went wrong');

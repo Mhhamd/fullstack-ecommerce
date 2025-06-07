@@ -9,12 +9,11 @@ import { useProduct } from '../../context/useProduct';
 function BestSellers() {
     const [bestSellers, setBestSellers] = useState<ProductI[] | null>(null);
     const { getProduct } = useProduct();
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     const getBestSellers = useCallback(async () => {
         try {
-            const res = await fetch(
-                'http://localhost:3500/api/product/get-all-products'
-            );
+            const res = await fetch(`${API_BASE}/api/product/get-all-products`);
             const data = await res.json();
             if (!res.ok) {
                 toast.error(data.message || 'Something went wrong');
@@ -27,7 +26,7 @@ function BestSellers() {
         } catch (error) {
             console.error(error);
         }
-    }, []);
+    }, [API_BASE]);
 
     useEffect(() => {
         getBestSellers();
