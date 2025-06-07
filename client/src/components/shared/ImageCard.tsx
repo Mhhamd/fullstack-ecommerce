@@ -12,6 +12,7 @@ function ImageCard({ showImage, hiddenImage, productName, price }: ImageProps) {
                 <img
                     src={showImage}
                     alt={productName}
+                    loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0 z-10"
                 />
                 <img
