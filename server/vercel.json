@@ -1,9 +1,9 @@
 {
     "version": 2,
-    "routes": [
+    "rewrites": [
         {
-            "src": "/api/.*",
-            "dest": "server.js"
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ],
     "outputDirectory": "public"
