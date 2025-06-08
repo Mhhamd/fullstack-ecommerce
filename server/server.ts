@@ -13,7 +13,10 @@ app.use(express.json());
 // Middleware
 app.use(
     cors({
-        origin: 'https://mercadoxfrontend.vercel.app',
+        origin: [
+            'https://mercadoxfrontend.vercel.app',
+            'https://mercadox-admin-panel.vercel.app',
+        ],
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: [

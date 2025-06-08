@@ -15,7 +15,10 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Middleware
 app.use((0, cors_1.default)({
-    origin: 'https://mercadoxfrontend.vercel.app',
+    origin: [
+        'https://mercadoxfrontend.vercel.app',
+        'https://mercadox-admin-panel.vercel.app',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
