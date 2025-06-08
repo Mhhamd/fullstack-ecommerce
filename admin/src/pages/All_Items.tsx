@@ -19,12 +19,11 @@ interface ProductI {
 function All_Items() {
     const [products, setProducts] = useState<ProductI[] | null>(null);
     const { token, getProduct } = useAuth();
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     const getProducts = useCallback(async () => {
         try {
-            const res = await fetch(
-                'http://localhost:3500/api/product/get-all-products'
-            );
+            const res = await fetch(`${API_BASE}/api/product/get-all-products`);
             const data = await res.json();
 
             if (!res.ok) {
@@ -36,7 +35,7 @@ function All_Items() {
             toast.error('Failed to get the products');
             console.error(error);
         }
-    }, []);
+    }, [API_BASE]);
 
     const handleDelete = async (id: string) => {
         try {

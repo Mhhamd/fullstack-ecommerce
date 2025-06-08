@@ -8,6 +8,7 @@ function Login() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     const { login } = useAuth();
 
@@ -25,7 +26,7 @@ function Login() {
         }
         setIsLoading(true);
         try {
-            const res = await fetch('http://localhost:3500/api/user/login', {
+            const res = await fetch(`${API_BASE}/api/user/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

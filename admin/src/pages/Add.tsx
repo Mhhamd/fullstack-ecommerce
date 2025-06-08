@@ -20,7 +20,7 @@ function Add() {
     const [sizes, setSizes] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate();
-
+    const API_BASE = import.meta.env.VITE_API_URL;
     const { token } = useAuth();
 
     const handleImageChange = (
@@ -58,16 +58,13 @@ function Add() {
         formData.append('bestSeller', JSON.stringify(bestSeller));
         formData.append('sizes', JSON.stringify(sizes));
         try {
-            const response = await fetch(
-                'http://localhost:3500/api/product/add',
-                {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: formData,
-                }
-            );
+            const response = await fetch(`${API_BASE}/api/product/add`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+            });
 
             const data = await response.json();
 

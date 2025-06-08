@@ -10,6 +10,7 @@ interface ProtectedRouteProps {
 function ProtectedRoute({ children }: ProtectedRouteProps) {
     const { token, logout } = useAuth();
     const [isValid, setIsValid] = useState<boolean | null>(null);
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const checkToken = async () => {
@@ -19,7 +20,7 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
             }
 
             try {
-                const res = await fetch('http://localhost:3500/api/protected', {
+                const res = await fetch(`${API_BASE}/api/protected`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -54,7 +55,7 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
             clearInterval(intervalId);
             window.removeEventListener('beforeunload', handleCloseTab);
         };
-    }, [token, logout]);
+    }, [token, logout, API_BASE]);
 
     if (isValid === null) return <div>Loading...</div>;
 

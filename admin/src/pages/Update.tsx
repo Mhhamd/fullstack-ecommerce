@@ -15,6 +15,7 @@ function Update() {
     const [sizes, setSizes] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate();
+    const API_BASE = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         if (currentProduct) {
@@ -48,7 +49,7 @@ function Update() {
         formData.append('sizes', JSON.stringify(sizes));
         try {
             const res = await fetch(
-                `http://localhost:3500/api/product/update/${currentProduct?._id}`,
+                `${API_BASE}/api/product/update/${currentProduct?._id}`,
                 {
                     method: 'PUT',
                     headers: {
