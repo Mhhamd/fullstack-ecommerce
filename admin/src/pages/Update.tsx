@@ -285,7 +285,7 @@ function Update() {
                     {/* Product bestseller */}
                     <div className="flex gap-2 mt-5">
                         <input
-                            checked={bestSeller || currentProduct?.bestSeller}
+                            checked={bestSeller}
                             onChange={() => setBestSeller(!bestSeller)}
                             id="bestseller"
                             type="checkbox"
