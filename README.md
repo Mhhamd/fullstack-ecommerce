@@ -28,4 +28,8 @@ A full-stack e-commerce web application built with React, TypeScript, Express, N
 - **Authentication:** JWT (JSON Web Tokens)
 - **Image Upload:** Cloudinary
 
+---
 
+## 🚀 Live Demo
+
+Check out the live application here: [MercadoX](https://mercadoxfrontend.vercel.app/)
