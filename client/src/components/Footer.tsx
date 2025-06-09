@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function Footer() {
     return (
         <footer className=" w-screen pt-15 pb-15 sm:px-10 px-5">
@@ -22,25 +24,33 @@ function Footer() {
                         Pages
                     </h2>
                     <ul className="space-y-1 ">
-                        <li className="hover:opacity-50">HOME</li>
-                        <li>HOME 2</li>
-                        <li>SHOP ALL</li>
-                        <li>ABOUT</li>
-                        <li>BLOG</li>
-                        <li>CONTACT</li>
-                        <li>FAQS</li>
+                        <li className="hover:opacity-50 transition-all duration-300">
+                            <Link to="/">HOME</Link>
+                        </li>
+                        <li className="hover:opacity-50 transition-all duration-300">
+                            <Link to="/shop-all">SHOP ALL</Link>
+                        </li>
+                        <li className="hover:opacity-50 transition-all duration-300">
+                            <Link to="/about">ABOUT</Link>
+                        </li>
+                        <li className="hover:opacity-50 transition-all duration-300">
+                            <Link to="/contact">CONTACT</Link>
+                        </li>
                     </ul>
                 </div>
 
-                {/* Template Info */}
+                {/* My Account */}
                 <div className="border-r-0 md:border-r  h-full p-10 sm:py-10 border-b md:border-b-0">
                     <h2 className="text-lg font-semibold mb-4 uppercase">
-                        Template Info
+                        My Account
                     </h2>
                     <ul className="space-y-1">
-                        <li>STYLE GUIDE</li>
-                        <li>LICENSES</li>
-                        <li>CHANGELOG</li>
+                        <li className="hover:opacity-50 transition-all duration-300">
+                            <Link to="/login">Login</Link>
+                        </li>
+                        <li className="hover:opacity-50 transition-all duration-300">
+                            <Link to="/register">Register</Link>
+                        </li>
                     </ul>
                 </div>
 
@@ -50,10 +60,18 @@ function Footer() {
                         Social
                     </h2>
                     <ul className="space-y-1">
-                        <li>FACEBOOK</li>
-                        <li>INSTAGRAM</li>
-                        <li>PINTEREST</li>
-                        <li>LINKEDIN</li>
+                        <li className="hover:opacity-50 transition-all duration-300 cursor-pointer">
+                            FACEBOOK
+                        </li>
+                        <li className="hover:opacity-50 transition-all duration-300 cursor-pointer">
+                            INSTAGRAM
+                        </li>
+                        <li className="hover:opacity-50 transition-all duration-300 cursor-pointer">
+                            PINTEREST
+                        </li>
+                        <li className="hover:opacity-50 transition-all duration-300 cursor-pointer">
+                            LINKEDIN
+                        </li>
                     </ul>
                 </div>
             </div>

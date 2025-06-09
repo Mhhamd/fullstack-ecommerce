@@ -1,6 +1,6 @@
 function NewsLetter() {
     return (
-        <form className="w-full pt-24">
+        <form onSubmit={(e) => e.preventDefault()} className="w-full pt-24">
             <div className="w-full flex items-center justify-center bg-black text-white py-20 px-4 flex-col">
                 <div className="mb-10 max-w-3xl">
                     <h1 className="text-2xl md:text-4xl font-semibold text-center uppercase">
