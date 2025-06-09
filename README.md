@@ -28,12 +28,4 @@ A full-stack e-commerce web application built with React, TypeScript, Express, N
 - **Authentication:** JWT (JSON Web Tokens)
 - **Image Upload:** Cloudinary
 
----
 
-## 🚀 Getting Started
-
-### 📦 Clone the repository
-
-```bash
-git clone https://github.com/yourusername/mercadox.git
-cd mercadox
